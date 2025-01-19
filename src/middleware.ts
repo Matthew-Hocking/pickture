@@ -4,20 +4,26 @@ import { NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth()
-  const { nextUrl } = req
-
-  if (nextUrl.pathname === '/' && userId) {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
-  }
-
-  if (isProtectedRoute(req)) {
-    if (!userId) {
-      return NextResponse.redirect(new URL('/', req.url));
+  try {
+    const { userId } = await auth()
+    const { nextUrl } = req
+  
+    if (nextUrl.pathname === '/' && userId) {
+      return NextResponse.redirect(new URL('/dashboard', req.url))
     }
-  }
+  
+    if (isProtectedRoute(req)) {
+      if (!userId) {
+        return NextResponse.redirect(new URL('/', req.url));
+      }
+    }
+  
+    return NextResponse.next();
+  } catch (error) {
+    console.log('Error in middleware:', error)
 
-  return NextResponse.next();
+    return new NextResponse('Internal Server Error', { status: 500})
+  }
 });
 
 export const config = {
