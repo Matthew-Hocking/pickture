@@ -14,22 +14,22 @@ datasource db {
 }
 
 model User {
-  id            Int         @id @default(autoincrement())
-  email         String?     @unique
-  password      String?
-  oauthProvider String?
-  oauthId       String?
-  name          String?
-  movieLists    MovieList[]
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  id         String      @id @unique
+  email      String      @unique
+  password   String?
+  name       String?
+  imageUrl   String?
+  movieLists MovieList[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model MovieList {
   id        Int      @id @default(autoincrement())
   title     String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   movies    Movie[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,9 +38,10 @@ model MovieList {
 model Movie {
   id          Int       @id @default(autoincrement())
   title       String
-  tmdbId      Int       @unique
-  movieList   MovieList @relation(fields: [movieListId], references: [id])
+  tmdbId      String    @unique
   movieListId Int
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  movieList   MovieList @relation(fields: [movieListId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
