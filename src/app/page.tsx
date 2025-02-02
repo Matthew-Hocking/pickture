@@ -1,4 +1,5 @@
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { Search, Check, RefreshCw } from "lucide-react";
 
 export default function Home() {
   return (
@@ -34,9 +35,7 @@ export default function Home() {
               <div className="flow-root rounded-lg bg-white px-6 pb-8">
                 <div className="-mt-6">
                   <div className="inline-flex items-center justify-center rounded-md bg-indigo-500 p-3 shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-white">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
+                    <Search color="white"/>
                   </div>
                   <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">Search</h3>
                   <p className="mt-5 text-base text-gray-500">
@@ -49,9 +48,7 @@ export default function Home() {
               <div className="flow-root rounded-lg bg-white px-6 pb-8">
                 <div className="-mt-6">
                   <div className="inline-flex items-center justify-center rounded-md bg-indigo-500 p-3 shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-white">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                    </svg>
+                    <Check color="white"/>
                   </div>
                   <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">Save</h3>
                   <p className="mt-5 text-base text-gray-500">
@@ -64,9 +61,7 @@ export default function Home() {
               <div className="flow-root rounded-lg bg-white px-6 pb-8">
                 <div className="-mt-6">
                   <div className="inline-flex items-center justify-center rounded-md bg-indigo-500 p-3 shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-6 w-6 text-white">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-                    </svg>
+                    <RefreshCw color="white"/>
                   </div>
                   <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">Spin</h3>
                   <p className="mt-5 text-base text-gray-500">
