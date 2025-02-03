@@ -13,12 +13,201 @@
   --color-text-inverted: #212121;
   
   --color-brand-primary: #E91E63;
-
-  /* === Modifiers === */
   --hover-brand-primary: #D81B60;
+
+  /* === Typography === */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+
+  /* === Spacing === */
+  --spacing-xxs: 0.25rem;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+
+  /* === Transitions === */
+  --transition-speed-fast: 0.2s;
+  --transition-speed-medium: 0.3s;
+  --transition-speed-slow: 0.5s;
+}
+
+/* Global Reset and Base Styles */
+* {
+  @apply box-border;
 }
 
 body {
-  background: var(--color-background);
-  @apply font-rubik;
+  @apply 
+    font-rubik 
+    text-text-primary 
+    bg-background 
+    min-h-screen 
+    antialiased;
+}
+
+/* Typography Styles */
+h1, h2, h3, h4, h5, h6 {
+  @apply 
+    font-bold 
+    text-text-primary 
+    leading-tight 
+    tracking-tight 
+    mb-4;
+}
+
+h1 { @apply text-4xl sm:text-5xl md:text-6xl; }
+h2 { @apply text-3xl sm:text-4xl; }
+h3 { @apply text-2xl sm:text-3xl; }
+h4 { @apply text-xl sm:text-2xl; }
+h5 { @apply text-lg sm:text-xl; }
+h6 { @apply text-base sm:text-lg; }
+
+p {
+  @apply 
+    text-text-secondary 
+    mb-4 
+    leading-relaxed;
+}
+
+/* Link Styles */
+a {
+  @apply 
+    text-brand 
+    hover:text-brand-hover 
+    transition-colors 
+    duration-300 
+    ease-in-out 
+    underline
+}
+
+/* Button Styles */
+.btn {
+  @apply 
+    inline-flex 
+    items-center 
+    justify-center 
+    px-6 
+    py-3 
+    rounded-md 
+    font-medium 
+    transition-all 
+    duration-300 
+    ease-in-out;
+}
+
+.btn-primary {
+  @apply 
+    bg-brand 
+    text-text-primary 
+    hover:bg-brand-hover;
+}
+
+.btn-secondary {
+  @apply 
+    bg-white 
+    text-text-inverted 
+    hover:bg-gray-100;
+}
+
+.btn-outline {
+  @apply 
+    border 
+    border-brand 
+    text-brand 
+    hover:bg-brand 
+    hover:text-text-primary;
+}
+
+/* Form Inputs */
+input, 
+textarea, 
+select {
+  @apply 
+    w-full 
+    px-4 
+    py-2 
+    border 
+    border-border 
+    rounded-md 
+    bg-surface 
+    text-text-primary 
+    focus:outline-none 
+    focus:ring-2 
+    focus:ring-brand;
+}
+
+/* Card Styles */
+.card {
+  @apply 
+    bg-surface 
+    rounded-lg 
+    shadow-md 
+    p-6 
+    transition-all 
+    duration-300 
+    ease-in-out;
+}
+
+.card:hover {
+  @apply shadow-lg;
+}
+
+/* Utility Classes */
+.gradient-text {
+  @apply 
+    bg-gradient-to-b 
+    from-brand 
+    to-brand-hover 
+    bg-clip-text 
+    text-transparent;
+}
+
+.center {
+  @apply 
+    flex 
+    items-center 
+    justify-center;
+}
+
+/* Responsive Utilities */
+.container {
+  @apply 
+    w-full 
+    max-w-7xl 
+    mx-auto 
+    px-4 
+    sm:px-6 
+    lg:px-8;
+}
+
+/* Scrollbar Styles (Webkit Browsers) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-surface;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-brand rounded-full;
+}
+
+/* Focus Styles */
+*:focus {
+  @apply 
+    outline-none 
+    ring-2 
+    ring-brand 
+    ring-opacity-50;
 }
