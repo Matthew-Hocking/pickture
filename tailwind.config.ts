@@ -9,8 +9,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: 'var(--color-background)',
+        surface: 'var(--color-surface)',
+        border: 'var(--color-border)',
+        'text-primary': 'var(--color-text-primary)',
+        'text-secondary': 'var(--color-text-secondary)',
+        'text-inverted': 'var(--color-text-inverted)',
+        brand: 'var(--color-brand-primary)',
+        'brand-hover': 'var(--hover-brand-primary)'
       },
       fontFamily: {
         rubik: ["var(--font-rubik)", "sans-serif"]

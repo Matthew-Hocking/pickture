@@ -3,19 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --background: #f5f5f5;
-  --foreground: #171717;
-}
+  /* === Base Colors === */
+  --color-background: #121212;
+  --color-surface: #1E1E1E;
+  --color-border: #55595f;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-text-primary: #FDFDFD;
+  --color-text-secondary: #EDEDED;
+  --color-text-inverted: #212121;
+  
+  --color-brand-primary: #E91E63;
+
+  /* === Modifiers === */
+  --hover-brand-primary: #D81B60;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  background: var(--color-background);
   @apply font-rubik;
 }

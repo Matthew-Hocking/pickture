@@ -1,78 +1,96 @@
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Search, Check, RefreshCw } from "lucide-react";
+import React from "react";
+
+interface Step {
+  icon: React.ReactNode;
+  title: string;
+  description: string
+}
+
+interface StepTileProps {
+  step: Step;
+}
+
+const StepTile: React.FC<StepTileProps> = ({ step }) => (
+  <div className="p-6 bg-surface rounded-lg">
+    <div className="flex gap-4 items-center">
+      <div className="flex items-center justify-center w-12 h-12 bg-brand rounded-full">
+        {step.icon}
+      </div>
+      <h3 className="text-xl text-text-primary font-bold">
+        {step.title}
+      </h3>
+    </div>
+    <div className="">
+      <p className="pt-4 text-text-secondary">
+        {step.description}
+      </p>
+    </div>
+  </div>
+);
+
+const StepTiles: React.FC = () => {
+  const steps: Step[] = [
+    {
+      icon: <Search color="white" strokeWidth={3}/>,
+      title: "Search",
+      description: "Find your favourites!"
+    },
+    {
+      icon: <Check color="white" strokeWidth={3}/>,
+      title: "Save",
+      description: "Keep track of your top picks in one place - across all streaming services!"
+    },
+    {
+      icon: <RefreshCw color="white" strokeWidth={3}/>,
+      title: "Spin",
+      description: "Lorem Ipsum"
+    }
+  ];
+
+  return (
+    <div className="">
+      <div className="grid lg:grid-cols-3 gap-8 pt-4 sm:max-w-md lg:max-w-none">
+        {steps.map((step, index) => (
+          <StepTile key={index} step={step} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
-      <main>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <main>
+      <div className="bg-gradient-to-b from-surface to-background">
+        <div className="grid place-items-center gap-8 sm:gap-20 py-20 lg:py-[max(15vh,50px)] mx-[max(15vw,50px)]">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-              <span className="block">Pickture</span>
-              <span className="block text-indigo-600">Just spin and watch</span>
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+              <span className="block text-text-primary">Pickture</span>
+              <span className="block bg-gradient-to-b from-brand to-brand-hover bg-clip-text text-transparent">Just spin and watch</span>
             </h1>
-            <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            Take the drama out of movie night and put it where it belongs - on the screen!
+            <p className="mt-3 max-w-md mx-auto text-text-secondary sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+              Take the drama out of movie night and put it where it belongs - on the screen!
             </p>
-            <div className="mt-5 max-w-md mx-auto flex justify-center gap-4 md:mt-8">
+            <div className="flex flex-col sm:flex-row justify-center gap-3 max-w-md mx-auto mt-5">
               <SignUpButton mode="modal">
-                <button className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                Sign Up
+                <button className="min-w-[120px] px-6 py-3 font-medium rounded-md text-text-primary bg-brand hover:bg-brand-hover">
+                  Sign Up
                 </button>
               </SignUpButton>
               <SignInButton mode="modal">
-                <button className="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                Sign In
+                <button className=" min-w-[120px] px-6 py-3 font-medium rounded-md text-text-inverted bg-white hover:bg-gray-100">
+                  Sign In
                 </button>
               </SignInButton>
             </div>
           </div>
-        </div>
-          
-        <div className="mt-20">
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="pt-6">
-              <div className="flow-root rounded-lg bg-white px-6 pb-8">
-                <div className="-mt-6">
-                  <div className="inline-flex items-center justify-center rounded-md bg-indigo-500 p-3 shadow-lg">
-                    <Search color="white"/>
-                  </div>
-                  <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">Search</h3>
-                  <p className="mt-5 text-base text-gray-500">
-                  Description of your first amazing feature that will help users achieve their goals.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="pt-6">
-              <div className="flow-root rounded-lg bg-white px-6 pb-8">
-                <div className="-mt-6">
-                  <div className="inline-flex items-center justify-center rounded-md bg-indigo-500 p-3 shadow-lg">
-                    <Check color="white"/>
-                  </div>
-                  <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">Save</h3>
-                  <p className="mt-5 text-base text-gray-500">
-                  Description of your second amazing feature that will help users achieve their goals.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="pt-6">
-              <div className="flow-root rounded-lg bg-white px-6 pb-8">
-                <div className="-mt-6">
-                  <div className="inline-flex items-center justify-center rounded-md bg-indigo-500 p-3 shadow-lg">
-                    <RefreshCw color="white"/>
-                  </div>
-                  <h3 className="mt-8 text-lg font-medium tracking-tight text-gray-900">Spin</h3>
-                  <p className="mt-5 text-base text-gray-500">
-                  Description of your third amazing feature that will help users achieve their goals.
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div>
+            <StepTiles />
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }
