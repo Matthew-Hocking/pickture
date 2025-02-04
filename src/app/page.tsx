@@ -73,7 +73,7 @@ export default function Home() {
                 <Button size="lg">Sign Up</Button>
               </SignUpButton>
               <SignInButton mode="modal">
-                <Button variant="secondary" size="lg">Sign Up</Button>
+                <Button variant="secondary" size="lg">Sign In</Button>
               </SignInButton>
             </div>
           </div>

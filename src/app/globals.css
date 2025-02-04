@@ -190,19 +190,6 @@ select {
     lg:px-8;
 }
 
-/* Scrollbar Styles (Webkit Browsers) */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-surface;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-brand rounded-full;
-}
-
 /* Focus Styles */
 *:focus {
   @apply 
