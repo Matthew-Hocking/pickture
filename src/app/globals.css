@@ -198,3 +198,10 @@ select {
     ring-brand 
     ring-opacity-50;
 }
+
+.transition {
+  @apply
+    transition-all 
+    duration-300 
+    ease-in-out;
+}

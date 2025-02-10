@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import classNames from 'classnames';
 
 // Button variant configuration
@@ -9,7 +10,8 @@ const buttonVariants = {
     secondary: 'bg-white text-text-inverted border border-border hover:bg-gray-100',
     outline: 'bg-transparent border border-brand text-brand hover:bg-brand hover:text-text-primary',
     ghost: 'hover:bg-surface hover:text-text-primary',
-    link: 'underline-offset-4 hover:underline text-brand'
+    link: 'underline-offset-4 hover:underline text-brand',
+    nav: 'no-underline text-text-primary'
   },
   size: {
     default: 'h-10 py-2 px-4',
@@ -19,18 +21,33 @@ const buttonVariants = {
   }
 };
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonBaseProps = {
   variant?: keyof typeof buttonVariants.variant;
   size?: keyof typeof buttonVariants.size;
   className?: string;
-}
+};
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+// Props that are specific to Next.js Link component
+type LinkProps = ButtonBaseProps & {
+  href: string;
+  asLink: true;
+} & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof ButtonBaseProps>;
+
+// Props that are specific to button element
+type ButtonProps = ButtonBaseProps & {
+  asLink?: false;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ButtonBaseProps>;
+
+// Combined props type using discriminated union
+type CombinedButtonProps = LinkProps | ButtonProps;
+
+const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, CombinedButtonProps>(
   ({ 
     className, 
     children, 
     variant = 'default', 
-    size = 'default', 
+    size = 'default',
+    asLink,
     ...props 
   }, ref) => {
     const classes = classNames(
@@ -40,11 +57,23 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className
     );
 
+    if (asLink && 'href' in props) {
+      return (
+        <Link
+          className={classes}
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          {...(props as LinkProps)}
+        >
+          {children}
+        </Link>
+      );
+    }
+
     return (
       <button
         className={classes}
-        ref={ref}
-        {...props}
+        ref={ref as React.Ref<HTMLButtonElement>}
+        {...(props as ButtonProps)}
       >
         {children}
       </button>

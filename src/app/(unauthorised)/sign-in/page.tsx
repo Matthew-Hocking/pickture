@@ -1,7 +1,7 @@
 import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import { Search, Check, RefreshCw } from "lucide-react";
 import React from "react";
-import { Button } from "./components/ui";
+import { Button } from "../../components/ui";
 
 const ICON_PROPS = {
   color: "white",

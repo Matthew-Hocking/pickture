@@ -1,14 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { Button } from "../ui"
+import { Button, SpinCTA } from "../ui"
 import { UserButton } from "@clerk/nextjs"
 import { useEffect, useState } from "react";
 import cn from 'classnames'
 
 
 
-const NavBar = () => {
+const Nav = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -27,13 +27,19 @@ const NavBar = () => {
       'bg-surface': isScrolled
     })}>
       <div className="container flex items-center justify-between h-16">
-        <Link href="/dashboard" className="flex items-center space-x-2 no-underline">
-          <span className="text-2xl md:text-4xl font-bold gradient-text mb-0">Pickture</span>
-        </Link>
+        <div className="flex items-center space-x-6">
+          <Link href="/dashboard" className="flex items-center space-x-2 no-underline">
+            <span className="text-2xl md:text-4xl font-bold gradient-text mb-0">Pickture</span>
+          </Link>
+          <SpinCTA />
+        </div>
+
+        
 
         <nav className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost">Discover</Button>
-          <Button variant="ghost">My List</Button>
+          <Button asLink href="/movies" variant="nav">Movies</Button>
+          <Button asLink href="/tv-shows" variant="nav">TV Shows</Button>
+          <Button asLink href="/my-list" variant="nav">My List</Button>
         </nav>
 
         <div className="flex items-center">
@@ -44,4 +50,4 @@ const NavBar = () => {
     </header>
   )
 }
-export default NavBar
+export default Nav
