@@ -28,7 +28,7 @@ const Nav = () => {
     })}>
       <div className="container flex items-center justify-between h-16">
         <div className="flex items-center space-x-6">
-          <Link href="/dashboard" className="flex items-center space-x-2 no-underline">
+          <Link href="/" className="flex items-center space-x-2 no-underline">
             <span className="text-2xl md:text-4xl font-bold gradient-text mb-0">Pickture</span>
           </Link>
           <SpinCTA />
