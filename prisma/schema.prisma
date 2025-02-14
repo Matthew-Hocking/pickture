@@ -19,6 +19,7 @@ model User {
   password   String?
   name       String?
   imageUrl   String?
+  region     String      @default("US")
   movieLists MovieList[]
 
   createdAt DateTime @default(now())
