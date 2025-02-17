@@ -75,16 +75,10 @@ export async function POST(req: Request) {
       const user = await prisma.user.upsert({
         where: { id },
         create: {
-          id,
-          email: email_addresses[0].email_address,
-          name: [first_name, last_name].filter(Boolean).join(' ') || null,
-          imageUrl: image_url || null,
+          clerkId: id,
           region
         },
         update: {
-          email: email_addresses[0].email_address,
-          name: [first_name, last_name].filter(Boolean).join(' ') || null,
-          imageUrl: image_url || null,
           region
         }
       });

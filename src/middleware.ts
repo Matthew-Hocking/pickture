@@ -30,7 +30,7 @@ export default clerkMiddleware(async (auth, req) => {
   } catch (error) {
     console.log('Error in middleware:', error)
 
-    return new NextResponse('Internal Server Error', { status: 500})
+    return new NextResponse('Internal Server Error', { status: 500 })
   }
 });
 
