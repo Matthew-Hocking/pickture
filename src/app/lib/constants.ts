@@ -1,4 +1,14 @@
-export const SUPPORTED_REGIONS = ["US", "GB", "CA", "AU", "NZ", "IE", "IN", "SG", "ZA"];
+export const SUPPORTED_REGIONS = [
+  "US",
+  "GB",
+  "CA",
+  "AU",
+  "NZ",
+  "IE",
+  "IN",
+  "SG",
+  "ZA",
+];
 
 export const REGION_NAMES: Record<string, string> = {
   US: "United States",

@@ -5,15 +5,15 @@
 :root {
   /* === Base Colors === */
   --color-background: #121212;
-  --color-surface: #1E1E1E;
+  --color-surface: #1e1e1e;
   --color-border: #55595f;
 
-  --color-text-primary: #FDFDFD;
-  --color-text-secondary: #EDEDED;
+  --color-text-primary: #fdfdfd;
+  --color-text-secondary: #ededed;
   --color-text-inverted: #212121;
-  
-  --color-brand-primary: #E91E63;
-  --hover-brand-primary: #D81B60;
+
+  --color-brand-primary: #e91e63;
+  --hover-brand-primary: #d81b60;
 
   /* === Typography === */
   --font-size-xs: 0.75rem;
@@ -47,8 +47,7 @@
 }
 
 body {
-  @apply 
-    font-rubik 
+  @apply font-rubik 
     text-text-primary 
     bg-background 
     min-h-screen 
@@ -56,44 +55,57 @@ body {
 }
 
 /* Typography Styles */
-h1, h2, h3, h4, h5, h6 {
-  @apply 
-    font-bold 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply font-bold 
     text-text-primary 
     leading-tight 
     tracking-tight 
     mb-4;
 }
 
-h1 { @apply text-4xl sm:text-5xl md:text-6xl; }
-h2 { @apply text-3xl sm:text-4xl; }
-h3 { @apply text-2xl sm:text-3xl; }
-h4 { @apply text-xl sm:text-2xl; }
-h5 { @apply text-lg sm:text-xl; }
-h6 { @apply text-base sm:text-lg; }
+h1 {
+  @apply text-4xl sm:text-5xl md:text-6xl;
+}
+h2 {
+  @apply text-3xl sm:text-4xl;
+}
+h3 {
+  @apply text-2xl sm:text-3xl;
+}
+h4 {
+  @apply text-xl sm:text-2xl;
+}
+h5 {
+  @apply text-lg sm:text-xl;
+}
+h6 {
+  @apply text-base sm:text-lg;
+}
 
 p {
-  @apply 
-    text-text-secondary 
+  @apply text-text-secondary 
     mb-4 
     leading-relaxed;
 }
 
 /* Link Styles */
 a {
-  @apply 
-    text-brand 
+  @apply text-brand 
     hover:text-brand-hover 
     transition-colors 
     duration-300 
     ease-in-out 
-    underline
+    underline;
 }
 
 /* Button Styles */
 .btn {
-  @apply 
-    inline-flex 
+  @apply inline-flex 
     items-center 
     justify-center 
     px-6 
@@ -106,22 +118,19 @@ a {
 }
 
 .btn-primary {
-  @apply 
-    bg-brand 
+  @apply bg-brand 
     text-text-primary 
     hover:bg-brand-hover;
 }
 
 .btn-secondary {
-  @apply 
-    bg-white 
+  @apply bg-white 
     text-text-inverted 
     hover:bg-gray-100;
 }
 
 .btn-outline {
-  @apply 
-    border 
+  @apply border 
     border-brand 
     text-brand 
     hover:bg-brand 
@@ -129,11 +138,10 @@ a {
 }
 
 /* Form Inputs */
-input, 
-textarea, 
+input,
+textarea,
 select {
-  @apply 
-    w-full 
+  @apply w-full 
     px-4 
     py-2 
     border 
@@ -148,8 +156,7 @@ select {
 
 /* Card Styles */
 .card {
-  @apply 
-    bg-surface 
+  @apply bg-surface 
     rounded-lg 
     shadow-md 
     p-6 
@@ -164,8 +171,7 @@ select {
 
 /* Utility Classes */
 .gradient-text {
-  @apply 
-    bg-gradient-to-b 
+  @apply bg-gradient-to-b 
     from-brand 
     to-brand-hover 
     bg-clip-text 
@@ -173,16 +179,14 @@ select {
 }
 
 .center {
-  @apply 
-    flex 
+  @apply flex 
     items-center 
     justify-center;
 }
 
 /* Responsive Utilities */
 .container {
-  @apply 
-    w-full 
+  @apply w-full 
     max-w-7xl 
     mx-auto 
     px-4 
@@ -192,16 +196,14 @@ select {
 
 /* Focus Styles */
 *:focus {
-  @apply 
-    outline-none 
+  @apply outline-none 
     ring-2 
     ring-brand 
     ring-opacity-50;
 }
 
 .transition {
-  @apply
-    transition-all 
+  @apply transition-all 
     duration-300 
     ease-in-out;
 }

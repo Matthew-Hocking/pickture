@@ -11,7 +11,9 @@ async function getCountryFromIP(ip: string) {
     }
 
     const countryCode = data.countryCode;
-    return SUPPORTED_REGIONS.includes(countryCode) ? countryCode : DEFAULT_REGION;
+    return SUPPORTED_REGIONS.includes(countryCode)
+      ? countryCode
+      : DEFAULT_REGION;
   } catch (error) {
     console.error("Error fetching country from IP:", error);
     return DEFAULT_REGION;
