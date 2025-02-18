@@ -14,15 +14,15 @@ datasource db {
 }
 
 model User {
-  id         String      @id @unique
-  email      String      @unique
-  password   String?
-  name       String?
-  imageUrl   String?
+  id         String      @id @default(cuid())
+  clerkId    String      @unique
+  region     String      @default("US")
   movieLists MovieList[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([clerkId])
 }
 
 model MovieList {
