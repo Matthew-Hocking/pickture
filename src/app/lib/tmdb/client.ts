@@ -1,10 +1,14 @@
-import { DiscoverParams, MovieDetails, PaginatedResponse, TMDBOptions } from "./types";
+import { DiscoverParams, MovieDetails, PaginatedResponse, TMDBOptions, TVDetails } from "./types";
 
 export class TMDBClient {
-  private basURL = process.env.TMDB_BASE_URL;
+  private baseURL = process.env.TMDB_BASE_URL;
   private options: TMDBOptions;
 
   constructor(options: TMDBOptions) {
+    if (!options.api_key) {
+      throw new Error('TMDB API key is required');
+    }
+
     this.options = {
       language: 'en-US',
       region: 'US',
@@ -12,10 +16,18 @@ export class TMDBClient {
     }
   }
 
-  private fetchOptions(): RequestInit {
+  setRegion(region: string) {
+    this.options.region = region;
+  }
+
+  getRegion(): string {
+    return this.options.region!;
+  }
+
+  private fetchOptions(revalidate?: number): RequestInit {
     return {
       next: {
-        revalidate: 3600
+        revalidate: revalidate ?? 3600
       },
       headers: {
         'Authorization': `Bearer ${this.options.api_key}`,
@@ -24,26 +36,68 @@ export class TMDBClient {
     }
   }
 
-  private async fetch<T>(endpoint: string, params: Record<string, any> = {}): Promise<T> {
+  private async fetch<T>(
+    endpoint: string, 
+    params: Record<string, any> = {},
+    options?: {
+      revalidate?: number | false;
+      region?: string;
+    }
+  ): Promise<T> {
     const queryParams = new URLSearchParams({
       language: this.options.language!,
+      region: options?.region || this.options.region!,
       ...params
     })
 
-    const response = await fetch(
-      `${this.basURL}${endpoint}?${queryParams}`,
-      this.fetchOptions()
-    )
+    const fetchOpts = options?.revalidate === false
+      ? {
+          ...this.fetchOptions(),
+          cache: 'no-store' as RequestCache
+        }
+      : this.fetchOptions(options?.revalidate);
 
-    if (!response.ok) {
-      throw new Error(`TMDB API error: ${response.status} ${response.statusText}`)
+    try {
+      const response = await fetch(
+        `${this.baseURL}${endpoint}?${queryParams}`,
+        fetchOpts
+      )
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(`TMDB API  error: ${error.status_message || response.statusText}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('An error occurred while fetching from TMDB')
     }
-
-    return response.json()
   }
 
-  async discoverMovies(params: DiscoverParams): Promise<PaginatedResponse<MovieDetails>> {
-    return this.fetch('/discover/movie', params)
+  async getDiscover(
+    mediaType: "movie" | "tv",
+    params: DiscoverParams = {},
+    options?: { revalidate?: number; region?: string }
+  ): Promise<PaginatedResponse<MovieDetails | TVDetails>> {
+    return this.fetch(`/discover/${mediaType}`, params, options);
   }
 
+  async getPopular(
+    mediaType: "movie" | "tv",
+    params: DiscoverParams = {},
+    options?: { revalidate?: number; region?: string }
+  ): Promise<PaginatedResponse<MovieDetails | TVDetails>> {
+    return this.fetch(`/${mediaType}/popular`, params, options)
+  }
+
+  async getTopRated(
+    mediaType: "movie" | "tv",
+    params: DiscoverParams = {},
+    options?: { revalidate?: number; region?: string }
+  ): Promise<PaginatedResponse<MovieDetails | TVDetails>> {
+    return this.fetch(`/${mediaType}/top_rated`, params, options)
+  }
 }

@@ -1,7 +1,7 @@
 export interface TMDBOptions {
   api_key: string;
   language?: string;
-  region?: string
+  region?: string;
 }
 
 export interface PaginatedResponse<T> {
@@ -13,22 +13,38 @@ export interface PaginatedResponse<T> {
 
 export interface Genre {
   id: number;
-  name: String
+  name: String;
 }
 
 export interface MovieDetails {
   id: number;
   title: string;
   overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
   release_date: string;
   vote_average: number;
-  genres: Genre[];
   popularity: number;
+  adult: boolean;
+  genre_ids: Genre[];
   runtime: number;
   status: string;
-  poster_path: string;
   imdb_id: string;
-  backdrop_path: string;
+}
+
+export interface TVDetails {
+  id: number;
+  name: string;
+  overview: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  first_air_date: string;
+  vote_average: number;
+  popularity: number;
+  genre_ids: Genre[];
+  original_language: string;
+  original_name: string;
+  adult: boolean
 }
 
 export interface DiscoverParams {
