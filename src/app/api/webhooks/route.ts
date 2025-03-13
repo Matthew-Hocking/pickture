@@ -84,7 +84,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const region = ip ? await getCountryFromIP(ip) : "US";
+    const region = ip && await getCountryFromIP(ip);
 
     try {
       const user = await prisma.user.upsert({

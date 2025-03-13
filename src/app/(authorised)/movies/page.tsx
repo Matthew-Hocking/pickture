@@ -1,30 +1,23 @@
-import React from 'react'
-import { getUserRegion } from '@/app/lib/auth';
-import { tmdb } from '@/app/lib/tmdb';
+// 'use client'
+
+import { List } from "@/app/components/ui";
+import { useRegion } from "@/app/context/RegionContext";
+import { tmdb } from "@/app/lib/tmdb";
+import React from "react";
+
 
 const Page = async () => {
-  const region = await getUserRegion()
+  // const { region } = useRegion();
 
-  const [
-    discoverMovies,
-    popularMovies,
-    topRatedMovies
-  ] = await Promise.all([
-    tmdb.getDiscover('movie', {}, { region }),
-    tmdb.getPopular('movie', {}, { region }),
-    tmdb.getTopRated('movie', {}, { region })
+  const [ topRatedMovies ] = await Promise.all([
+    tmdb.getTopRated("movie", {}, { region: 'NZ' })
   ])
-
-  console.log('discoverMovies', discoverMovies)
-  console.log('popularMovies', popularMovies)
-  console.log('topRatedMovies', topRatedMovies)
 
   return (
     <div>
-      Page
+      <List results={topRatedMovies.results} />
     </div>
   )
-}
+};
 
 export default Page;
- 

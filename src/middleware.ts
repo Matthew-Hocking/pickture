@@ -1,9 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { DEFAULT_REGION } from "./app/lib/constants";
-import { getUserRegion } from "./app/lib/auth";
 
 const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/api/webhooks"]);
+const isApiRoute = createRouteMatcher(["/api/user(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   try {
@@ -12,6 +11,10 @@ export default clerkMiddleware(async (auth, req) => {
     }
 
     const { userId } = await auth();
+
+    if (isApiRoute(req)) {
+      return NextResponse.next();
+    }
 
     if (isPublicRoute(req)) {
       if (userId) {
@@ -25,24 +28,7 @@ export default clerkMiddleware(async (auth, req) => {
       return NextResponse.redirect(new URL("/sign-in", req.url));
     }
 
-    let region = DEFAULT_REGION;
-
-    try {
-      if (userId) {
-        region = await getUserRegion(userId);
-      }
-    } catch (error) {
-      console.log("Error getting user region:", error);
-    }
-
-    const requestHeaders = new Headers(req.headers);
-    requestHeaders.set("x-user-region", region);
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
+    return NextResponse.next();
   } catch (error) {
     console.log("Error in middleware:", error);
     return new NextResponse("Internal Server Error", { status: 500 });

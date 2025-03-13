@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { RegionDropdown } from "../ui";
 
 const Footer = () => {
   return (
@@ -10,6 +11,7 @@ const Footer = () => {
           <p className="text-text-secondary">
             Take the drama out of movie night and put it where it belongs - on the screen!
           </p>
+          <RegionDropdown/>
         </div>
 
         <div>
