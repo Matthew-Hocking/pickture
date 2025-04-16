@@ -1,53 +1,118 @@
 'use client'
 
-import React from "react";
+import React, { useRef, useState } from "react";
 import {
   MovieDetails,
   TVDetails,
 } from "@/app/lib/tmdb/types";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Swiper as SwiperType } from 'swiper/types'
 import 'swiper/css';
 import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Pagination, Navigation } from "swiper/modules";
+import Button from "./Button";
+import { ChevronRight, ChevronLeft } from "lucide-react";
+import classNames from "classnames";
 
 interface ListProps {
   results: (MovieDetails | TVDetails)[];
 }
 
 const List: React.FC<ListProps> = ({ results }) => {
+  const swiperRef = useRef<SwiperType | null>(null);
+  const [activeSlides, setActiveSlides] = useState<number[]>([]);
+  const [atStart, setAtStart] = useState(true);
+  const [atEnd, setAtEnd] = useState(false);
+
+  const updateVisibleSlides = (swiper: SwiperType) => {
+    const { activeIndex, params } = swiper;
+    const groupSize = params.slidesPerGroup || 1;
+    const indices = Array.from({ length: groupSize }, (_, i) => activeIndex + i);
+    setActiveSlides(indices);
+  };
+
+  const updateNavigationState = (swiper: SwiperType) => {
+    setAtStart(swiper.isBeginning);
+    setAtEnd(swiper.isEnd);
+    updateVisibleSlides(swiper);
+  };
+
   return (
     <div>
-      <Swiper
-        modules={[Navigation, Pagination]}
-        centeredSlides={false}
-        spaceBetween={50}
-        slidesPerView={6}
-        slidesPerGroupSkip={5}
-        navigation
-        pagination={{ clickable: false }}
-      >
-        {results.map((item) => (
-          <SwiperSlide key={item.id} className="w-48">
-            <div className="rounded-lg overflow-hidden shadow-lg bg-gray-800">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                alt={("title" in item ? item.title : item.name) || "Poster"}
-                className="w-full h-72 object-cover"
-              />
-              <div className="p-2 text-white text-sm">
-                <p className="font-semibold">
-                  {"title" in item ? item.title : item.name}
-                </p>
-                <p className="text-gray-400 text-xs">
-                  {"release_date" in item ? item.release_date : item.first_air_date}
-                </p>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      <div className="relative overflow-visible">
+        <Swiper
+          spaceBetween={10}
+          slidesPerView={3}
+          slidesPerGroup={3}
+          centeredSlides={false}
+          simulateTouch={true}
+          breakpoints={{
+            640: {
+              slidesPerView: 3,
+              slidesPerGroup: 3
+            },
+            768: {
+              slidesPerView: 4,
+              slidesPerGroup: 4,
+              simulateTouch: false
+            },
+            1024: {
+              slidesPerView: 6,
+              slidesPerGroup: 6,
+              simulateTouch: false
+            },
+          }}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+            updateNavigationState(swiper);
+          }}
+          onSlideChange={(swiper) => updateNavigationState(swiper)}
+          className="!overflow-visible"
+        >
+          {results.map((item, index) => {
+            const isActive = activeSlides.includes(index);
+
+            return (
+              <SwiperSlide key={item.id} className="w-48 select-none">
+                <div
+                  className={classNames(
+                    "transition-transform duration-300 hover:cursor-pointer",
+                    isActive ? "hover:scale-105" : "grayscale opacity-50 pointer-events-none"
+                  )}
+                >
+                  <div className="rounded-md overflow-hidden shadow-lg aspect-[2/3]">
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                      alt={("title" in item ? item.title : item.name) || "Poster"}
+                      className="w-full h-full object-cover"
+                      draggable={false}
+                    />
+                  </div>
+                </div>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>       
+      </div>
+
+      <div className="mt-4 flex justify-between items-center">
+        <Button
+          onClick={() => swiperRef.current?.slidePrev()}
+          disabled={atStart}
+          variant="ghost"
+          size="icon"
+        >
+          <ChevronLeft size={35}/>
+        </Button>
+        <Button
+          onClick={() => swiperRef.current?.slideNext()}
+          disabled={atEnd}
+          variant="ghost"
+          size="icon"
+        >
+          <ChevronRight size={35}/>
+        </Button>
+      </div>
     </div>
   );
 };
