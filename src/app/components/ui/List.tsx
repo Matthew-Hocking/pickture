@@ -16,9 +16,10 @@ import classNames from "classnames";
 
 interface ListProps {
   results: (MovieDetails | TVDetails)[];
+  onClick?: (id: number) => void;
 }
 
-const List: React.FC<ListProps> = ({ results }) => {
+const List = ({ results, onClick }: ListProps) => {
   const swiperRef = useRef<SwiperType | null>(null);
   const [activeSlides, setActiveSlides] = useState<number[]>([]);
   const [atStart, setAtStart] = useState(true);
@@ -79,6 +80,7 @@ const List: React.FC<ListProps> = ({ results }) => {
                     "transition-transform duration-300 hover:cursor-pointer",
                     isActive ? "hover:scale-105" : "grayscale opacity-50 pointer-events-none"
                   )}
+                  onClick={() => isActive && onClick?.(item.id)}
                 >
                   <div className="rounded-md overflow-hidden shadow-lg aspect-[2/3]">
                     <img
