@@ -1,4 +1,4 @@
-import { RegionCode } from "@/app/lib/constants";
+import { getRegionFromCookie } from "@/app/lib/helpers/region";
 import { NextRequest, NextResponse } from "next/server";
 
 const tmdbBaseUrl = process.env.TMDB_BASE_URL;
@@ -28,11 +28,7 @@ export async function GET(
     const { path } = await params;
     const endpoint = path.join("/");
 
-    const region: RegionCode =
-      (searchParams.get("region") as RegionCode) ||
-      (request.cookies.get("pickture-region")?.value as RegionCode) ||
-      (process.env.DEFAULT_REGION as RegionCode) ||
-      "US";
+    const region = await getRegionFromCookie()
 
     const isAllowed = ALLOWED_ENDPOINTS.some(
       (allowed) => endpoint === allowed || endpoint.startsWith(`${allowed}/`)

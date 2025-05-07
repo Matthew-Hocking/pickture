@@ -1,5 +1,4 @@
-import { cookies } from 'next/headers';
-import { DEFAULT_REGION, RegionCode } from '../../constants';
+import { RegionCode } from '../../constants';
 import { getRegionFromCookie } from '../../helpers/region';
 
 // Main TMDB API fetcher for server components
