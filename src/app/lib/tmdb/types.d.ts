@@ -53,3 +53,12 @@ export interface DiscoverParams {
   with_genres?: string;
   release_year?: number;
 }
+
+export interface MediaItem {
+  id: number;
+  media_type: 'movie' | 'tv';
+  title?: string;
+  name?: string;
+  release_date?: string;
+  first_air_date?: string;
+};

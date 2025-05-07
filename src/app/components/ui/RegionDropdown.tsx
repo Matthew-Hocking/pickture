@@ -1,15 +1,19 @@
-"use client";
+'use client'
 
-import { REGION_NAMES, RegionCode, SUPPORTED_REGIONS } from "@/app/lib/constants";
-import { useRegion } from "@/app/context/RegionContext";
+import { REGION_NAMES, RegionCode } from "@/app/lib/constants";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
-export default function RegionDropdown() {
-  const { region, setRegion } = useRegion();
+type Props = {
+  initialRegion: RegionCode;
+};
+
+export default function RegionDropdown({ initialRegion }: Props) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   async function handleRegionChange(event: React.ChangeEvent<HTMLSelectElement>) {
-    const newRegion = event.target.value;
+    const newRegion = event.target.value as RegionCode;
 
     startTransition(async () => {
       const response = await fetch("/api/user/update-region", {
@@ -17,24 +21,27 @@ export default function RegionDropdown() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ region: newRegion }),
       });
-      
-      const result = await response.json();
-      console.log("API response:", response.status, result);
-    
+
       if (response.ok) {
-        setRegion(newRegion as RegionCode);
+        router.refresh();
       } else {
+        const result = await response.json();
         console.error("Failed to update region:", result.error);
       }
     });
   }
 
   return (
-    <select value={region} onChange={handleRegionChange} disabled={isPending}>
-      {Object.entries(REGION_NAMES).map((region) => (
-        <option key={region[0]} value={region[0]}>
-          {region[1]}
+    <select
+      value={initialRegion}
+      onChange={handleRegionChange}
+      disabled={isPending}
+    >
+      {Object.entries(REGION_NAMES).map(([code, name]) => (
+        <option key={code} value={code}>
+          {name}
         </option>
       ))}
     </select>
-  )};
+  );
+}
