@@ -1,9 +1,14 @@
 import Link from "next/link"
 import { RegionDropdown } from "../ui";
+import { getRegionFromCookie } from "@/app/lib/helpers/region";
 
-const Footer = () => {
+const defaultRegion = process.env.DEFAULT_REGION ?? 'US';
+
+const Footer = async () => {
+  const region = await getRegionFromCookie()
+
   return (
-    <footer className="bg-surface ">
+    <footer className="bg-surface">
       <div className="container py-8 grid grid-cols-1 md:grid-cols-3 gap-8">
 
         <div>
@@ -11,7 +16,7 @@ const Footer = () => {
           <p className="text-text-secondary">
             Take the drama out of movie night and put it where it belongs - on the screen!
           </p>
-          <RegionDropdown/>
+          <RegionDropdown initialRegion={region} />
         </div>
 
         <div>
