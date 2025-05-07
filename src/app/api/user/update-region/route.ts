@@ -39,7 +39,15 @@ export async function PUT(request: Request) {
       },
     });
 
-    return NextResponse.json(updatedUser);
+    const response = NextResponse.json(updatedUser);
+    response.cookies.set("pickture-region", region, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+      httpOnly: false,
+      sameSite: "lax",
+    });
+
+    return response;
   } catch (error) {
     console.error("Error updating user region:", error);
     
