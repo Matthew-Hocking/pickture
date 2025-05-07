@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Button, SpinCTA } from "../ui"
+import { Button, SearchBar, SpinCTA } from "../ui"
 import { UserButton } from "@clerk/nextjs"
 import { useEffect, useState } from "react";
 import cn from 'classnames'
@@ -34,17 +34,18 @@ const Nav = () => {
           <SpinCTA />
         </div>
 
-        
-
         <nav className="hidden md:flex items-center space-x-4">
           <Button asLink href="/movies" variant="nav">Movies</Button>
           <Button asLink href="/tv-shows" variant="nav">TV Shows</Button>
           <Button asLink href="/my-list" variant="nav">My List</Button>
         </nav>
 
+        <div>
+          <SearchBar />
+        </div>
+
         <div className="flex items-center">
           <UserButton />
-
         </div>
       </div>
     </header>
