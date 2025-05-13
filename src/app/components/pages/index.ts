@@ -1,0 +1,1 @@
+export { default as MoviesPageClient } from './MoviesPageClient'

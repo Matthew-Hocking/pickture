@@ -44,7 +44,7 @@ export interface TVDetails {
   genre_ids: Genre[];
   original_language: string;
   original_name: string;
-  adult: boolean
+  adult: boolean;
 }
 
 export interface DiscoverParams {
@@ -56,9 +56,9 @@ export interface DiscoverParams {
 
 export interface MediaItem {
   id: number;
-  media_type: 'movie' | 'tv';
+  media_type: "movie" | "tv";
   title?: string;
   name?: string;
   release_date?: string;
   first_air_date?: string;
-};
+}
