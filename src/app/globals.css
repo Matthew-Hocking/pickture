@@ -47,7 +47,7 @@
 }
 
 body {
-  @apply font-rubik 
+  @apply font-golos_text 
     text-text-primary 
     bg-background 
     min-h-screen 

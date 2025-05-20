@@ -1,18 +1,17 @@
 import { getRegionFromCookie } from '@/app/lib/helpers/region';
 import { fetchTMDBData } from '@/app/lib/tmdb/server/tmdb-server';
-import { Metadata, ResolvingMetadata } from 'next';
-
-
-type Props = {
-  params: { id: string };
-};
+import { Metadata } from 'next';
+import { MovieCredits, MovieDetails, MovieReleaseDates, TMDBResponse, TMDBWatchProvidersResponse } from '@/app/lib/tmdb/types';
+import { getDirectorNames } from '@/app/lib/helpers/directors';
+import { MoviePage } from '@/app/components/pages';
+import { notFound } from 'next/navigation';
+import { transformWatchProviders } from '@/app/lib/helpers/provider-link';
 
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string }> },
-  parent: ResolvingMetadata
 ): Promise<Metadata> {
   try {
-    const { id } = await params
+    const { id } = await params;
     const region = await getRegionFromCookie();
     const movie = await fetchTMDBData(`movie/${id}`, { region });
 
@@ -36,22 +35,39 @@ export async function generateMetadata(
   }
 }
 
-export default async function MoviePage(
-  { params } : { params: Promise<{ id: string }> } 
-) {
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   try {
     const { id } = await params;
     const region = await getRegionFromCookie();
-    const movie = await fetchTMDBData(`movie/${id}`, { region });
 
+    const [movie, credits, similar, providers] = await Promise.all([
+      fetchTMDBData(`movie/${id}`) as Promise<MovieDetails>,
+      fetchTMDBData(`movie/${id}/credits`) as Promise<MovieCredits>,
+      fetchTMDBData(`movie/${id}/similar`) as Promise<TMDBResponse>,
+      fetchTMDBData(`movie/${id}/watch/providers`) as Promise<TMDBWatchProvidersResponse>,
+    ]);
+    
+    const topCast = credits?.cast?.slice(0, 6) || [];
+    const directors = credits?.crew?.filter((member) => member.job === 'Director') || [];
+    const directorInfo = getDirectorNames(directors);
+    const regionSpecificProviders = providers.results[region]
+    const watchOptions = transformWatchProviders(regionSpecificProviders, movie.title, region)
+    
     return (
-      <div>
-        <h1 className="text-2xl font-bold">{movie.title}</h1>
-        <p className="text-text-secondary mt-2">{movie.overview}</p>
-      </div>
+      <MoviePage
+        movie={movie}
+        topCast={topCast}
+        directors={directorInfo}
+        similar={similar.results}
+        watchOptions={watchOptions}
+      />
     );
   } catch (error) {
-    console.error('Error loading movie:', error);
-    return <div>Error loading movie details. Please try again later.</div>;
+    console.error('Error loading movie page:', error);
+    notFound();
   }
 }

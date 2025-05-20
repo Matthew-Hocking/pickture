@@ -1,4 +1,4 @@
-import { DEFAULT_REGION, SUPPORTED_REGIONS } from "../lib/constants";
+import { DEFAULT_REGION, SUPPORTED_REGIONS } from "../lib/regions";
 
 async function getCountryFromIP(ip: string) {
   try {

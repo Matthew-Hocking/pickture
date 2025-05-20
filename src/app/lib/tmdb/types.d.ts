@@ -30,6 +30,9 @@ export interface MovieDetails {
   runtime: number;
   status: string;
   imdb_id: string;
+  tagline: string;
+  genres: Genre[];
+  original_language: string;
 }
 
 export interface TVDetails {
@@ -44,7 +47,7 @@ export interface TVDetails {
   genre_ids: Genre[];
   original_language: string;
   original_name: string;
-  adult: boolean
+  adult: boolean;
 }
 
 export interface DiscoverParams {
@@ -56,9 +59,80 @@ export interface DiscoverParams {
 
 export interface MediaItem {
   id: number;
-  media_type: 'movie' | 'tv';
+  media_type: "movie" | "tv";
   title?: string;
   name?: string;
   release_date?: string;
   first_air_date?: string;
+}
+
+export interface CastMember {
+  id: number;
+  character: string;
+  credit_id: string;
+  name: string;
+  profile_path: string
+}
+
+export interface CrewMember {
+  id: number;
+  credit_id: string;
+  job: string;
+  name: string;
+  profile_path: string;
+}
+
+export interface MovieCredits {
+  id: number;
+  cast: CastMember[];
+  crew: CrewMember[];
+}
+
+export interface MovieReleaseDates {
+  id: number;
+  results: {
+    iso_3166_1: string
+    release_dates: {
+      certification: string;
+    }[]
+  }[]
+}
+
+export interface ReleaseDate {
+  certification: string;
+  descriptors?: string[];
+  iso_639_1?: string;
+  note?: string;
+  release_date?: string;
+  type?: number;
+};
+
+export interface RegionCertifications {
+  iso_3166_1: string;
+  release_dates: ReleaseDate[];
+};
+
+export interface TMDBResponse {
+  results: MovieDetails[]
+};
+
+type TMDBProvider = {
+  display_priority: number;
+  logo_path: string;
+  provider_id: number;
+  provider_name: string;
+};
+
+type TMDBWatchProviderEntry = {
+  link?: string;
+  rent?: TMDBProvider[];
+  buy?: TMDBProvider[];
+  flatrate?: TMDBProvider[];
+};
+
+export interface TMDBWatchProvidersResponse {
+  id: string;
+  results: {
+    [countryCode: string]: TMDBWatchProviderEntry;
+  };
 };

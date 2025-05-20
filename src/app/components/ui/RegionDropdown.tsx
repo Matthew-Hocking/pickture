@@ -1,6 +1,6 @@
 'use client'
 
-import { REGION_NAMES, RegionCode } from "@/app/lib/constants";
+import { REGION_NAMES, RegionCode } from "@/app/lib/regions";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
