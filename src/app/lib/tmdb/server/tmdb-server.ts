@@ -1,4 +1,4 @@
-import { RegionCode } from '../../constants';
+import { RegionCode } from '../../regions';
 import { getRegionFromCookie } from '../../helpers/region';
 
 // Main TMDB API fetcher for server components

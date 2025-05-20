@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { DEFAULT_REGION, RegionCode } from "../constants";
+import { DEFAULT_REGION, RegionCode } from "../regions";
 
 export async function getRegionFromCookie(): Promise<RegionCode> {
   try {

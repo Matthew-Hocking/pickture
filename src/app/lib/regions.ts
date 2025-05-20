@@ -5,9 +5,6 @@ export type RegionCode =
   | "AU"
   | "NZ"
   | "IE"
-  | "IN"
-  | "SG"
-  | "ZA"
 ;
 
 export const SUPPORTED_REGIONS: RegionCode[] = [
@@ -16,22 +13,16 @@ export const SUPPORTED_REGIONS: RegionCode[] = [
   "CA",
   "AU",
   "NZ",
-  "IE",
-  "IN",
-  "SG",
-  "ZA",
+  "IE"
 ];
 
 export const REGION_NAMES: Record<RegionCode, string> = {
-  US: "United States",
-  GB: "United Kingdom",
-  CA: "Canada",
   AU: "Australia",
-  NZ: "New Zealand",
+  CA: "Canada",
   IE: "Ireland",
-  IN: "India",
-  SG: "Singapore",
-  ZA: "South Africa",
+  NZ: "New Zealand",
+  GB: "United Kingdom",
+  US: "United States",
 };
 
 export const DEFAULT_REGION: RegionCode = "US";

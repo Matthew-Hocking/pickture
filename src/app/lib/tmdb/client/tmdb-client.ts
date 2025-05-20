@@ -1,4 +1,4 @@
-import { RegionCode } from "../../constants";
+import { RegionCode } from "../../regions";
 
 export default async function fetchTMDBDataClient<T = any>(
   endpoint: string, 
