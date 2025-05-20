@@ -14,7 +14,7 @@ interface MoviesClientProps {
   categoryData: Record<string, (MovieDetails | TVDetails)[]>;
 }
 
-export default function MoviesClient({ categoryData }: MoviesClientProps) {
+export default function MoviesPage({ categoryData }: MoviesClientProps) {
   const router = useRouter();
 
   const handlePosterClick = (id: number) => {

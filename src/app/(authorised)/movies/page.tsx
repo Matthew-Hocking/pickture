@@ -1,4 +1,4 @@
-import { MoviesPageClient } from "@/app/components/pages";
+import { MoviesPage } from "@/app/components/pages";
 import { fetchTMDBData } from "@/app/lib/tmdb/server/tmdb-server";
 import { MovieDetails, TVDetails } from "@/app/lib/tmdb/types";
 import { Metadata } from "next";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 const CATEGORIES = ["popular", "now_playing", "top_rated"] as const;
 type Category = typeof CATEGORIES[number];
 
-export default async function MoviesPage() {
+export default async function Page() {
   type TMDBResponse = { results: (MovieDetails | TVDetails)[] };
 
   const categoryData: Record<Category, (MovieDetails | TVDetails)[]> = Object.fromEntries(
@@ -23,5 +23,5 @@ export default async function MoviesPage() {
     )
   );
 
-  return <MoviesPageClient categoryData={categoryData} />;
+  return <MoviesPage categoryData={categoryData} />;
 }
