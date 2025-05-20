@@ -19,7 +19,7 @@ export default {
         'brand-hover': 'var(--hover-brand-primary)'
       },
       fontFamily: {
-        rubik: ["var(--font-rubik)", "sans-serif"]
+        golos_text: ["var(--font-golos_text)", "sans-serif"]
       }
     },
   },
