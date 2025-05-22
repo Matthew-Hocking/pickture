@@ -17,21 +17,44 @@ model User {
   id         String      @id @default(cuid())
   clerkId    String      @unique
   region     String      @default("US")
-  movieLists MediaList[]
+
+  trackedMovies  UserMovieTracking[]
+  trackedTvShows UserTvShowTracking[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model MediaList {
-  id        Int      @id @default(autoincrement())
-  title     String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  movies    Movie[]
-  tvShows   TvShow[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model UserMovieTracking {
+  id      Int    @id @default(autoincrement())
+  userId  String
+  movieId Int
+
+  watched Boolean  @default(false)
+  liked   Boolean  @default(false)
+  addedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, movieId])
+  @@index([userId])
+}
+
+model UserTvShowTracking {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  tvShowId Int
+
+  watched Boolean  @default(false)
+  liked   Boolean  @default(false)
+  addedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tvShow TvShow @relation(fields: [tvShowId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tvShowId])
+  @@index([userId])
 }
 
 model Movie {
@@ -52,8 +75,7 @@ model Movie {
   directors   MovieCrewMember[]
   providers   MovieWatchProvider[]
 
-  mediaListId Int
-  mediaList   MediaList @relation(fields: [mediaListId], references: [id], onDelete: Cascade)
+  trackedByUsers UserMovieTracking[]
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -69,8 +91,7 @@ model TvShow {
   directors TvShowCrewMember[]
   providers TvShowWatchProvider[]
 
-  mediaListId Int
-  mediaList   MediaList @relation(fields: [mediaListId], references: [id], onDelete: Cascade)
+  trackedByUsers UserTvShowTracking[]
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -78,8 +99,9 @@ model TvShow {
 }
 
 model Genre {
-  id   Int    @id
-  name String
+  id     String @id @default(cuid())
+  tmdbId Int    @unique
+  name   String
 
   movies  Movie[]  @relation("MovieGenres")
   tvShows TvShow[] @relation("TvShowGenres")
