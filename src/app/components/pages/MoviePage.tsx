@@ -33,8 +33,8 @@ const MoviePage = ({ movie, topCast, directors, similar, watchOptions }: MoviePa
     };
 
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-3 gap-8">
+      <div className="max-w-5xl mx-auto px-4 py-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
           <Image
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt={`Poster of ${movie.title}`}
@@ -67,7 +67,7 @@ const MoviePage = ({ movie, topCast, directors, similar, watchOptions }: MoviePa
                 ))}
               </div>
 
-              <p className="text-md text-text-secondary mb-4">{movie.overview}</p>
+              <p className="text-sm text-text-secondary mb-4 md:text-base">{movie.overview}</p>
 
               {watchOptions && watchOptions.length > 0 ? (
                 <div className="mb-6">

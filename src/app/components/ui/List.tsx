@@ -11,8 +11,8 @@ import { Swiper as SwiperType } from 'swiper/types'
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Button from "./Button";
-import { ChevronRight, ChevronLeft } from "lucide-react";
-import classNames from "classnames";
+import { ChevronRight, ChevronLeft, Plus, Check } from "lucide-react";
+import cn from "classnames";
 
 interface ListProps {
   results: (MovieDetails | TVDetails)[];
@@ -24,6 +24,7 @@ const List = ({ results, onClick }: ListProps) => {
   const [activeSlides, setActiveSlides] = useState<number[]>([]);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
+  const [bookmarkedIds, setBookmarkedIds] = useState<Set<number>>(new Set());
 
   const updateVisibleSlides = (swiper: SwiperType) => {
     const { activeIndex, params } = swiper;
@@ -38,28 +39,67 @@ const List = ({ results, onClick }: ListProps) => {
     updateVisibleSlides(swiper);
   };
 
+  const toggleBookmark = async (id: number) => {
+    const isBookmarked = bookmarkedIds.has(id);
+
+    try {
+      if (isBookmarked) {
+        await fetch(`/api/user/movies/${id}`, {
+          method: 'DELETE',
+        });
+      } else {
+        const res = await fetch('/api/user/movies', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ tmdbId: id }),
+        });
+
+        if (!res.ok) throw new Error('Failed to save movie');
+      }
+
+      setBookmarkedIds(prev => {
+        const newSet = new Set(prev);
+        isBookmarked ? newSet.delete(id) : newSet.add(id);
+        return newSet;
+      });
+    } catch (error) {
+      console.error('Error saving/removing movie:', error);
+    }
+  };
+
   return (
     <div>
       <div className="relative overflow-visible">
         <Swiper
           spaceBetween={10}
-          slidesPerView={3}
-          slidesPerGroup={3}
+          slidesPerView={2}
+          slidesPerGroup={2}
           centeredSlides={false}
           simulateTouch={true}
           breakpoints={{
-            640: {
+            480: {
               slidesPerView: 3,
               slidesPerGroup: 3
             },
-            768: {
+            640: {
               slidesPerView: 4,
-              slidesPerGroup: 4,
+              slidesPerGroup: 4
+            },
+            768: {
+              slidesPerView: 5,
+              slidesPerGroup: 5,
               simulateTouch: false
             },
             1024: {
               slidesPerView: 6,
               slidesPerGroup: 6,
+              simulateTouch: false
+            },
+            1280: {
+              slidesPerView: 7,
+              slidesPerGroup: 7,
               simulateTouch: false
             },
           }}
@@ -72,16 +112,34 @@ const List = ({ results, onClick }: ListProps) => {
         >
           {results.map((item, index) => {
             const isActive = activeSlides.includes(index);
+            const isBookmarked = bookmarkedIds.has(item.id);
 
             return (
-              <SwiperSlide key={item.id} className="w-48 select-none">
+              <SwiperSlide key={item.id} className="w-48 select-none relative">
                 <div
-                  className={classNames(
-                    "transition-transform duration-300 hover:cursor-pointer",
+                  className={cn(
+                    "transition-transform duration-300 hover:cursor-pointer relative",
                     isActive ? "hover:scale-105" : "grayscale opacity-50 pointer-events-none"
                   )}
                   onClick={() => isActive && onClick?.(item.id)}
                 >
+                  {/* Bookmark Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleBookmark(item.id);
+                    }}
+                    className={cn("absolute top-0 left-2 z-10 w-6 h-8 shadow-md text-black flex items-center justify-center transition-colors opacity-50 hover:opacity-100",
+                        isBookmarked ? "bg-brand" : "bg-border"
+                      )}
+                    style={{
+                      clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)',
+                    }}
+                  >
+                    {isBookmarked ? <Check size={14} color="#FFF"/> : <Plus size={14} color="#FFF"/>}
+                  </button>
+
+                  {/* Poster */}
                   <div className="rounded-md overflow-hidden shadow-lg aspect-[2/3]">
                     <img
                       src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
