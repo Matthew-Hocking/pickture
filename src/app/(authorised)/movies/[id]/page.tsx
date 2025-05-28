@@ -1,7 +1,7 @@
 import { getRegionFromCookie } from '@/app/lib/helpers/region';
 import { fetchTMDBData } from '@/app/lib/tmdb/server/tmdb-server';
 import { Metadata } from 'next';
-import { MovieCredits, MovieDetails, MovieReleaseDates, TMDBResponse, TMDBWatchProvidersResponse } from '@/app/lib/tmdb/types';
+import { MovieCredits, MovieDetails, TMDBResponse, TMDBWatchProvidersResponse } from '@/app/lib/tmdb/types';
 import { getDirectorNames } from '@/app/lib/helpers/directors';
 import { MoviePage } from '@/app/components/pages';
 import { notFound } from 'next/navigation';

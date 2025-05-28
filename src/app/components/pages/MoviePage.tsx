@@ -3,7 +3,7 @@
 import { CastMember, MovieDetails } from '@/app/lib/tmdb/types';
 import Image from 'next/image';
 import React from 'react'
-import { List } from '../ui';
+import { BookmarkButton, List } from '../ui';
 import { useRouter } from 'next/navigation';
 import { formatRuntime } from '@/app/lib/helpers/runtime';
 import Link from 'next/link';
@@ -33,15 +33,18 @@ const MoviePage = ({ movie, topCast, directors, similar, watchOptions }: MoviePa
     };
 
     return (
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-3 gap-8">
-          <Image
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-            alt={`Poster of ${movie.title}`}
-            width={500}
-            height={750}
-            className="rounded-md shadow-md"
-          />
+      <div className="max-w-5xl mx-auto px-4 py-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="relative">
+            <BookmarkButton id={movie.id} />
+            <Image
+              src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+              alt={`Poster of ${movie.title}`}
+              width={500}
+              height={750}
+              className="rounded-md shadow-md"
+            />
+          </div>
 
           <div className="flex flex-col justify-between md:col-span-2">
             <div>
@@ -67,7 +70,7 @@ const MoviePage = ({ movie, topCast, directors, similar, watchOptions }: MoviePa
                 ))}
               </div>
 
-              <p className="text-md text-text-secondary mb-4">{movie.overview}</p>
+              <p className="text-sm text-text-secondary mb-4 md:text-base">{movie.overview}</p>
 
               {watchOptions && watchOptions.length > 0 ? (
                 <div className="mb-6">

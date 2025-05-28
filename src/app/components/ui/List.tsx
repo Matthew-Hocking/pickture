@@ -12,10 +12,13 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import Button from "./Button";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import classNames from "classnames";
+import cn from "classnames";
+import BookmarkButton from "./BookmarkButton";
+
+type WithBookmark<T> = T & { bookmarked?: boolean };
 
 interface ListProps {
-  results: (MovieDetails | TVDetails)[];
+  results: (WithBookmark<MovieDetails> | WithBookmark<TVDetails>)[];
   onClick?: (id: number) => void;
 }
 
@@ -43,23 +46,32 @@ const List = ({ results, onClick }: ListProps) => {
       <div className="relative overflow-visible">
         <Swiper
           spaceBetween={10}
-          slidesPerView={3}
-          slidesPerGroup={3}
+          slidesPerView={2}
+          slidesPerGroup={2}
           centeredSlides={false}
           simulateTouch={true}
           breakpoints={{
-            640: {
+            480: {
               slidesPerView: 3,
               slidesPerGroup: 3
             },
-            768: {
+            640: {
               slidesPerView: 4,
-              slidesPerGroup: 4,
+              slidesPerGroup: 4
+            },
+            768: {
+              slidesPerView: 5,
+              slidesPerGroup: 5,
               simulateTouch: false
             },
             1024: {
               slidesPerView: 6,
               slidesPerGroup: 6,
+              simulateTouch: false
+            },
+            1280: {
+              slidesPerView: 7,
+              slidesPerGroup: 7,
               simulateTouch: false
             },
           }}
@@ -74,14 +86,18 @@ const List = ({ results, onClick }: ListProps) => {
             const isActive = activeSlides.includes(index);
 
             return (
-              <SwiperSlide key={item.id} className="w-48 select-none">
+              <SwiperSlide key={item.id} className="w-48 select-none relative">
                 <div
-                  className={classNames(
-                    "transition-transform duration-300 hover:cursor-pointer",
+                  className={cn(
+                    "transition-transform duration-300 hover:cursor-pointer relative",
                     isActive ? "hover:scale-105" : "grayscale opacity-50 pointer-events-none"
                   )}
                   onClick={() => isActive && onClick?.(item.id)}
                 >
+                  {/* Bookmark button for saving */}
+                  <BookmarkButton id={item.id} initialBookmarked={item.bookmarked}/>
+
+                  {/* Poster */}
                   <div className="rounded-md overflow-hidden shadow-lg aspect-[2/3]">
                     <img
                       src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}

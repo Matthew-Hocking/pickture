@@ -14,34 +14,176 @@ datasource db {
 }
 
 model User {
-  id         String      @id @default(cuid())
-  clerkId    String      @unique
-  region     String      @default("US")
-  movieLists MovieList[]
+  id      String @id @default(cuid())
+  clerkId String @unique
+  region  String @default("US")
+
+  trackedMovies  UserMovieTracking[]  @relation("UserClerk")
+  trackedTvShows UserTvShowTracking[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
+model UserMovieTracking {
+  id      Int    @id @default(autoincrement())
+  clerkId String
+  movieId Int
+
+  watched Boolean  @default(false)
+  liked   Boolean  @default(false)
+  addedAt DateTime @default(now())
+
+  user  User  @relation("UserClerk", fields: [clerkId], references: [clerkId], onDelete: Cascade)
+  movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
+  @@unique([clerkId, movieId])
   @@index([clerkId])
 }
 
-model MovieList {
-  id        Int      @id @default(autoincrement())
-  title     String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  movies    Movie[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model UserTvShowTracking {
+  id       Int    @id @default(autoincrement())
+  userId   String
+  tvShowId Int
+
+  watched Boolean  @default(false)
+  liked   Boolean  @default(false)
+  addedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tvShow TvShow @relation(fields: [tvShowId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tvShowId])
+  @@index([userId])
 }
 
 model Movie {
-  id          Int       @id @default(autoincrement())
+  id          Int                  @id @default(autoincrement())
   title       String
-  tmdbId      String    @unique
-  movieListId Int
-  movieList   MovieList @relation(fields: [movieListId], references: [id], onDelete: Cascade)
+  tmdbId      Int                  @unique
+  genres      Genre[]              @relation("MovieGenres")
+  imdbId      String
+  overview    String?
+  posterPath  String?
+  releaseDate DateTime
+  runtime     Int
+  status      String
+  tagline     String?
+  voteAverage Float
+  voteCount   Int
+  cast        MovieCastMember[]
+  directors   MovieCrewMember[]
+  providers   MovieWatchProvider[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  trackedByUsers UserMovieTracking[]
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastSyncedAt DateTime?
+}
+
+model TvShow {
+  id        Int                   @id @default(autoincrement())
+  name      String
+  tmdbId    Int                   @unique
+  genres    Genre[]               @relation("TvShowGenres")
+  cast      TvShowCastMember[]
+  directors TvShowCrewMember[]
+  providers TvShowWatchProvider[]
+
+  trackedByUsers UserTvShowTracking[]
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  lastSyncedAt DateTime?
+}
+
+model Genre {
+  id     String @id @default(cuid())
+  tmdbId Int
+  name   String
+
+  movies  Movie[]  @relation("MovieGenres")
+  tvShows TvShow[] @relation("TvShowGenres")
+
+  @@unique([tmdbId])
+}
+
+model MovieCastMember {
+  movieId     Int
+  name        String
+  character   String
+  profilePath String?
+
+  movie Movie @relation(fields: [movieId], references: [id])
+
+  @@id([movieId, name])
+}
+
+model TvShowCastMember {
+  tvShowId    Int
+  name        String
+  character   String
+  profilePath String?
+
+  tvShow TvShow @relation(fields: [tvShowId], references: [id])
+
+  @@id([tvShowId, name])
+}
+
+model MovieCrewMember {
+  creditId    String  @id
+  job         String
+  name        String
+  profilePath String?
+
+  movieId Int
+  movie   Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
+}
+
+model TvShowCrewMember {
+  creditId    String  @id
+  job         String
+  name        String
+  profilePath String?
+
+  tvShowId Int
+  tvShow   TvShow @relation(fields: [tvShowId], references: [id], onDelete: Cascade)
+}
+
+model WatchProvider {
+  id       Int    @id
+  name     String
+  logoPath String
+
+  movieLinks  MovieWatchProvider[]
+  tvShowLinks TvShowWatchProvider[]
+}
+
+model MovieWatchProvider {
+  id         Int         @id @default(autoincrement())
+  movieId    Int
+  providerId Int
+  link       String
+  offers     OfferType[]
+
+  movie    Movie         @relation(fields: [movieId], references: [id], onDelete: Cascade)
+  provider WatchProvider @relation(fields: [providerId], references: [id])
+}
+
+model TvShowWatchProvider {
+  id         Int         @id @default(autoincrement())
+  tvShowId   Int
+  providerId Int
+  link       String
+  offers     OfferType[]
+
+  tvShow   TvShow        @relation(fields: [tvShowId], references: [id], onDelete: Cascade)
+  provider WatchProvider @relation(fields: [providerId], references: [id])
+}
+
+enum OfferType {
+  Stream
+  Rent
+  Buy
 }

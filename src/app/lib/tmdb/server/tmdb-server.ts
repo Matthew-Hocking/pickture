@@ -1,5 +1,8 @@
 import { RegionCode } from '../../regions';
 import { getRegionFromCookie } from '../../helpers/region';
+import { getDirectorNames } from '../../helpers/directors';
+import { transformWatchProviders } from '../../helpers/provider-link';
+import { MovieCredits, MovieDetails, TMDBResponse, TMDBWatchProvidersResponse } from '../types';
 
 // Main TMDB API fetcher for server components
 export async function fetchTMDBData<T = any>(
@@ -44,4 +47,29 @@ export async function fetchTMDBData<T = any>(
   }
   
   return response.json();
+}
+
+export async function fetchMovieBundle(id: string) {
+  const region = await getRegionFromCookie();
+
+  const [movie, credits, similar, providers] = await Promise.all([
+    fetchTMDBData(`movie/${id}`) as Promise<MovieDetails>,
+    fetchTMDBData(`movie/${id}/credits`) as Promise<MovieCredits>,
+    fetchTMDBData(`movie/${id}/similar`) as Promise<TMDBResponse>,
+    fetchTMDBData(`movie/${id}/watch/providers`) as Promise<TMDBWatchProvidersResponse>,
+  ]);
+
+  const topCast = credits?.cast?.slice(0, 6) || [];
+  const directors = credits?.crew?.filter((member) => member.job === "Director") || [];
+
+  const regionSpecificProviders = providers.results[region];
+  const watchOptions = transformWatchProviders(regionSpecificProviders, movie.title, region);
+
+  return {
+    movie,
+    topCast,
+    directors,
+    similar: similar.results,
+    watchOptions,
+  };
 }
