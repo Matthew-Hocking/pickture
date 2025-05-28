@@ -11,11 +11,14 @@ import { Swiper as SwiperType } from 'swiper/types'
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Button from "./Button";
-import { ChevronRight, ChevronLeft, Plus, Check } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import cn from "classnames";
+import BookmarkButton from "./BookmarkButton";
+
+type WithBookmark<T> = T & { bookmarked?: boolean };
 
 interface ListProps {
-  results: (MovieDetails | TVDetails)[];
+  results: (WithBookmark<MovieDetails> | WithBookmark<TVDetails>)[];
   onClick?: (id: number) => void;
 }
 
@@ -24,7 +27,6 @@ const List = ({ results, onClick }: ListProps) => {
   const [activeSlides, setActiveSlides] = useState<number[]>([]);
   const [atStart, setAtStart] = useState(true);
   const [atEnd, setAtEnd] = useState(false);
-  const [bookmarkedIds, setBookmarkedIds] = useState<Set<number>>(new Set());
 
   const updateVisibleSlides = (swiper: SwiperType) => {
     const { activeIndex, params } = swiper;
@@ -37,36 +39,6 @@ const List = ({ results, onClick }: ListProps) => {
     setAtStart(swiper.isBeginning);
     setAtEnd(swiper.isEnd);
     updateVisibleSlides(swiper);
-  };
-
-  const toggleBookmark = async (id: number) => {
-    const isBookmarked = bookmarkedIds.has(id);
-
-    try {
-      if (isBookmarked) {
-        await fetch(`/api/user/movies/${id}`, {
-          method: 'DELETE',
-        });
-      } else {
-        const res = await fetch('/api/user/movies', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ tmdbId: id }),
-        });
-
-        if (!res.ok) throw new Error('Failed to save movie');
-      }
-
-      setBookmarkedIds(prev => {
-        const newSet = new Set(prev);
-        isBookmarked ? newSet.delete(id) : newSet.add(id);
-        return newSet;
-      });
-    } catch (error) {
-      console.error('Error saving/removing movie:', error);
-    }
   };
 
   return (
@@ -112,7 +84,6 @@ const List = ({ results, onClick }: ListProps) => {
         >
           {results.map((item, index) => {
             const isActive = activeSlides.includes(index);
-            const isBookmarked = bookmarkedIds.has(item.id);
 
             return (
               <SwiperSlide key={item.id} className="w-48 select-none relative">
@@ -123,21 +94,8 @@ const List = ({ results, onClick }: ListProps) => {
                   )}
                   onClick={() => isActive && onClick?.(item.id)}
                 >
-                  {/* Bookmark Button */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleBookmark(item.id);
-                    }}
-                    className={cn("absolute top-0 left-2 z-10 w-6 h-8 shadow-md text-black flex items-center justify-center transition-colors opacity-50 hover:opacity-100",
-                        isBookmarked ? "bg-brand" : "bg-border"
-                      )}
-                    style={{
-                      clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)',
-                    }}
-                  >
-                    {isBookmarked ? <Check size={14} color="#FFF"/> : <Plus size={14} color="#FFF"/>}
-                  </button>
+                  {/* Bookmark button for saving */}
+                  <BookmarkButton id={item.id} initialBookmarked={item.bookmarked}/>
 
                   {/* Poster */}
                   <div className="rounded-md overflow-hidden shadow-lg aspect-[2/3]">
