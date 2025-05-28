@@ -61,7 +61,6 @@ export async function fetchMovieBundle(id: string) {
 
   const topCast = credits?.cast?.slice(0, 6) || [];
   const directors = credits?.crew?.filter((member) => member.job === "Director") || [];
-  const directorInfo = getDirectorNames(directors);
 
   const regionSpecificProviders = providers.results[region];
   const watchOptions = transformWatchProviders(regionSpecificProviders, movie.title, region);
@@ -69,7 +68,7 @@ export async function fetchMovieBundle(id: string) {
   return {
     movie,
     topCast,
-    directors: directorInfo,
+    directors,
     similar: similar.results,
     watchOptions,
   };

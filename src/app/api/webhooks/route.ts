@@ -88,7 +88,7 @@ export async function POST(req: Request) {
 
     try {
       const user = await prisma.user.upsert({
-        where: { id },
+        where: { clerkId: id },
         create: {
           clerkId: id,
           region,
@@ -113,7 +113,7 @@ export async function POST(req: Request) {
         { status: 201 }
       );
     } catch (error) {
-      console.error("Error upserting user:", error);
+      console.error("Error upserting user:", error instanceof Error ? error.stack : error);
       console.error("Attempted payload:", {
         id,
         email: email_addresses[0].email_address,
