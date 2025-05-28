@@ -14,11 +14,11 @@ datasource db {
 }
 
 model User {
-  id         String      @id @default(cuid())
-  clerkId    String      @unique
-  region     String      @default("US")
+  id      String @id @default(cuid())
+  clerkId String @unique
+  region  String @default("US")
 
-  trackedMovies  UserMovieTracking[]
+  trackedMovies  UserMovieTracking[]  @relation("UserClerk")
   trackedTvShows UserTvShowTracking[]
 
   createdAt DateTime @default(now())
@@ -27,18 +27,18 @@ model User {
 
 model UserMovieTracking {
   id      Int    @id @default(autoincrement())
-  userId  String
+  clerkId String
   movieId Int
 
   watched Boolean  @default(false)
   liked   Boolean  @default(false)
   addedAt DateTime @default(now())
 
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user  User  @relation("UserClerk", fields: [clerkId], references: [clerkId], onDelete: Cascade)
   movie Movie @relation(fields: [movieId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, movieId])
-  @@index([userId])
+  @@unique([clerkId, movieId])
+  @@index([clerkId])
 }
 
 model UserTvShowTracking {
@@ -60,7 +60,7 @@ model UserTvShowTracking {
 model Movie {
   id          Int                  @id @default(autoincrement())
   title       String
-  tmdbId      String               @unique
+  tmdbId      Int                  @unique
   genres      Genre[]              @relation("MovieGenres")
   imdbId      String
   overview    String?
@@ -85,7 +85,7 @@ model Movie {
 model TvShow {
   id        Int                   @id @default(autoincrement())
   name      String
-  tmdbId    String                @unique
+  tmdbId    Int                   @unique
   genres    Genre[]               @relation("TvShowGenres")
   cast      TvShowCastMember[]
   directors TvShowCrewMember[]
@@ -100,11 +100,13 @@ model TvShow {
 
 model Genre {
   id     String @id @default(cuid())
-  tmdbId Int    @unique
+  tmdbId Int
   name   String
 
   movies  Movie[]  @relation("MovieGenres")
   tvShows TvShow[] @relation("TvShowGenres")
+
+  @@unique([tmdbId])
 }
 
 model MovieCastMember {
