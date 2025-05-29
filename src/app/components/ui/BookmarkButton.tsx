@@ -21,7 +21,15 @@ const BookmarkButton = ({ id, initialBookmarked = false }: BookmarkButtonProps) 
     setLoading(true);
     try {
       if (bookmarked) {
-        await fetch(`/api/user/movies/${id}`, { method: "DELETE" });
+        const res = await fetch("/api/user/movies/delete/", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ tmdbId: id})
+        });
+
+        if (!res.ok) throw new Error("Failed to delete movie");
       } else {
         const res = await fetch("/api/user/movies/save", {
           method: "POST",
