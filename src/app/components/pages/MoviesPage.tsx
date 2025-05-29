@@ -15,7 +15,7 @@ interface MoviesClientProps {
   categoryData: Record<string, MovieDetails[]>;
 }
 
-export default function MoviesPage({ categoryData }: MoviesClientProps) {
+const MoviesPage = ({ categoryData }: MoviesClientProps) => {
   const router = useRouter();
   const [augmentedCategoryData, setAugmentedCategoryData] = useState<
     Record<string, (MovieDetails & { bookmarked?: boolean })[]>
@@ -29,7 +29,7 @@ export default function MoviesPage({ categoryData }: MoviesClientProps) {
   useEffect(() => {
     const fetchBookmarkedIds = async () => {
       try {
-        const res = await fetch('/api/user/movies/saved-ids');
+        const res = await fetch('/api/user/movies/get-saved-ids');
         if (!res.ok) throw new Error('Failed to fetch bookmarked IDs');
 
         const data = await res.json();
@@ -45,8 +45,6 @@ export default function MoviesPage({ categoryData }: MoviesClientProps) {
             })),
           ])
         );
-
-        console.log('updated', updated)
 
         setAugmentedCategoryData(updated);
       } catch (error) {
@@ -70,3 +68,5 @@ export default function MoviesPage({ categoryData }: MoviesClientProps) {
     </div>
   );
 }
+
+export default MoviesPage;

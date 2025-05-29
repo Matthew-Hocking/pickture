@@ -8,7 +8,12 @@ export const metadata: Metadata = {
   description: 'Explore movies to watch'
 }
 
-const CATEGORIES = ["popular", "now_playing", "top_rated"] as const;
+const CATEGORIES = [
+  "popular",
+  // "now_playing", // Not important to render right now as all of these are only in cinemas (not streaming)
+  "top_rated"
+] as const;
+
 type Category = typeof CATEGORIES[number];
 
 export default async function Page() {
