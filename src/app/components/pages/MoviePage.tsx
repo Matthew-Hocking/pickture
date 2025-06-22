@@ -1,6 +1,6 @@
 'use client'
 
-import { CastMember, MovieDetails } from '@/app/lib/tmdb/types';
+import { MovieCastMember, MovieDetails } from '@/app/lib/tmdb/types';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { BookmarkButton, List } from '../ui';
@@ -8,24 +8,28 @@ import { useRouter } from 'next/navigation';
 import { formatRuntime } from '@/app/lib/helpers/runtime';
 import Link from 'next/link';
 
-type MoviePageProps = {
-  movie: MovieDetails;
-  topCast: CastMember[] | null;
-  directors: {
-    label: string;
-    names: string;
-  } | null;
-  similar: MovieDetails[];
-  watchOptions: {
-    provider_id: number;
-    provider_name: string;
-    link: string;
-    logo_path: string;
-    offers: Array<'Rent' | 'Buy' | 'Stream'>;
-  }[];
+interface MoviePageProps {
+  data: {
+    movie: MovieDetails;
+    topCast: MovieCastMember[] | null;
+    directors: {
+      label: string;
+      names: string;
+    } | null;
+    similar: MovieDetails[];
+    watchOptions: {
+      provider_id: number;
+      provider_name: string;
+      link: string;
+      logo_path: string;
+      offers: Array<'Rent' | 'Buy' | 'Stream'>;
+    }[];
+  }
 }
 
-const MoviePage = ({ movie, topCast, directors, similar, watchOptions }: MoviePageProps) => {
+const MoviePage = ({ data }: MoviePageProps) => {
+  const { movie, topCast, directors, similar, watchOptions } = data
+
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [augmentedSimilar, setAugmentedSimilar] = useState<(MovieDetails & { bookmarked?: boolean })[]>(similar);
   

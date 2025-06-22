@@ -7,15 +7,15 @@ import { useEffect, useState } from "react";
 
 const CATEGORY_DISPLAY_NAMES: Record<string, string> = {
   popular: "Popular Movies",
-  now_playing: "Now Playing",
+  // now_playing: "Now Playing",
   top_rated: "Top Rated"
 };
 
-interface MoviesClientProps {
+interface MoviesPageProps {
   categoryData: Record<string, MovieDetails[]>;
 }
 
-const MoviesPage = ({ categoryData }: MoviesClientProps) => {
+const MoviesPage = ({ categoryData }: MoviesPageProps) => {
   const router = useRouter();
   const [augmentedCategoryData, setAugmentedCategoryData] = useState<
     Record<string, (MovieDetails & { bookmarked?: boolean })[]>

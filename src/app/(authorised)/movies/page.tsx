@@ -22,8 +22,8 @@ export default async function Page() {
   const categoryData: Record<Category, MovieDetails[]> = Object.fromEntries(
     await Promise.all(
       CATEGORIES.map(async (category) => {
-        const response = await fetchTMDBData<TMDBResponse>(`movie/${category}`);
-        return [category, response.results];
+        const { results } = await fetchTMDBData<TMDBResponse>(`movie/${category}`);
+        return [category, results];
       })
     )
   );
