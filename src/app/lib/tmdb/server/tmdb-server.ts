@@ -3,22 +3,24 @@ import { getRegionFromCookie } from "../../helpers/region";
 import { transformWatchProviders } from "../../helpers/provider-link";
 import {
   MovieCastMember,
+  MovieCrewMember,
   MovieDetails,
   TMDBWatchProvidersResponse,
   TvShowCastMember,
+  TvShowCrewMember,
   TVShowDetails,
 } from "../types";
 import {
-  getMovieDirectorNames,
-  getTvDirectorNames,
+  extractMovieDirectors,
+  extractTvDirectors
 } from "../../helpers/directors";
 
 type BundleType = "movie" | "tv";
 
-interface BundleResult<T, C> {
+interface BundleResult<T, C, D> {
   item: T;
   topCast: C[];
-  directors: { label: string, names: string } | null
+  directors: D[] | null
   similar: T[];
   watchOptions: ReturnType<typeof transformWatchProviders>;
 }
@@ -68,16 +70,18 @@ export async function fetchTMDBData<T = any>(
   return response.json();
 }
 
-export async function fetchBundle<T, C>(
+export async function fetchBundle<T, C, D>(
   id: string,
   type: BundleType,
-  getDirectors: (crew: any[]) => { label: string, names: string } | null
-): Promise<BundleResult<T, C>> {
+  getDirectors: (crew: any[]) => D[] | null
+): Promise<BundleResult<T, C, D>> {
   const region = await getRegionFromCookie();
+
+  const creditsEndpoint = type === "movie" ? 'credits' : 'aggregate_credits'
 
   const [item, credits, similar, providers] = await Promise.all([
     fetchTMDBData<T>(`${type}/${id}`),
-    fetchTMDBData<{ cast: C[]; crew: any[] }>(`${type}/${id}/credits`),
+    fetchTMDBData<{ cast: C[]; crew: D[] }>(`${type}/${id}/${creditsEndpoint}`),
     fetchTMDBData<{ results: T[] }>(`${type}/${id}/similar`),
     fetchTMDBData<TMDBWatchProvidersResponse>(`${type}/${id}/watch/providers`),
   ])
@@ -100,23 +104,23 @@ export async function fetchBundle<T, C>(
 }
 
 export async function fetchMovieBundle(id: string) {
-  const bundle = await fetchBundle<MovieDetails, MovieCastMember>(
+  const { item, ...rest} = await fetchBundle<MovieDetails, MovieCastMember, MovieCrewMember>(
     id,
     "movie",
-    getMovieDirectorNames
+    extractMovieDirectors
   );
 
   return {
-    movie: bundle.item,
-    ...bundle,
+    movie: item,
+    ...rest,
   };
 }
 
 export async function fetchTvShowBundle(id: string) {
-  const { item, ...rest } = await fetchBundle<TVShowDetails, TvShowCastMember>(
+  const { item, ...rest } = await fetchBundle<TVShowDetails, TvShowCastMember, TvShowCrewMember>(
     id,
     "tv",
-    getTvDirectorNames
+    extractTvDirectors
   );
 
   return {

@@ -1,21 +1,19 @@
 'use client'
 
-import { MovieCastMember, MovieDetails } from '@/app/lib/tmdb/types';
+import { MovieCastMember, MovieCrewMember, MovieDetails } from '@/app/lib/tmdb/types';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react'
 import { BookmarkButton, List } from '../ui';
 import { useRouter } from 'next/navigation';
 import { formatRuntime } from '@/app/lib/helpers/runtime';
 import Link from 'next/link';
+import { formatDirectorsForDisplay } from '@/app/lib/helpers/directors';
 
 interface MoviePageProps {
   data: {
     movie: MovieDetails;
     topCast: MovieCastMember[] | null;
-    directors: {
-      label: string;
-      names: string;
-    } | null;
+    directors: MovieCrewMember[];
     similar: MovieDetails[];
     watchOptions: {
       provider_id: number;
@@ -29,6 +27,8 @@ interface MoviePageProps {
 
 const MoviePage = ({ data }: MoviePageProps) => {
   const { movie, topCast, directors, similar, watchOptions } = data
+
+  const formattedDirectors = formatDirectorsForDisplay(directors)
 
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [augmentedSimilar, setAugmentedSimilar] = useState<(MovieDetails & { bookmarked?: boolean })[]>(similar);
@@ -170,9 +170,9 @@ const MoviePage = ({ data }: MoviePageProps) => {
           </div>
 
           <ul className="text-sm text-gray-500 space-y-1">
-            {directors && (
+            {formattedDirectors && (
               <li>
-                <strong>{directors.label}:</strong> {directors.names}
+                <strong>{formattedDirectors.label}:</strong> {formattedDirectors.names}
               </li>
             )}
           </ul>
