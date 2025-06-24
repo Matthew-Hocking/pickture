@@ -43,6 +43,7 @@ export interface TVShowDetails extends BaseMediaDetails {
   name: string;
   first_air_date: string;
   last_air_date: string;
+  number_of_seasons: number;
 }
 
 export interface DiscoverParams {
@@ -96,7 +97,7 @@ export interface TvShowCrewJob {
 }
 
 export interface TvShowCastMember extends BasePerson {
-  roles: TvShowCastRole;
+  roles: TvShowCastRole[];
   total_episode_count: number;
 }
 
