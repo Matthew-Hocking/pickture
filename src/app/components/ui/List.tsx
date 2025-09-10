@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import {
   MovieDetails,
-  TVDetails,
+  TVShowDetails,
 } from "@/app/lib/tmdb/types";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -18,7 +18,7 @@ import BookmarkButton from "./BookmarkButton";
 type WithBookmark<T> = T & { bookmarked?: boolean };
 
 interface ListProps {
-  results: (WithBookmark<MovieDetails> | WithBookmark<TVDetails>)[];
+  results: (WithBookmark<MovieDetails> | WithBookmark<TVShowDetails>)[];
   onClick?: (id: number) => void;
 }
 
@@ -99,12 +99,19 @@ const List = ({ results, onClick }: ListProps) => {
 
                   {/* Poster */}
                   <div className="rounded-md overflow-hidden shadow-lg aspect-[2/3]">
-                    <img
-                      src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                      alt={("title" in item ? item.title : item.name) || "Poster"}
-                      className="w-full h-full object-cover"
-                      draggable={false}
-                    />
+                    {item.poster_path ? (
+                      <img
+                        src={`https://image.tmdb.org/t/p/w342${item.poster_path}`}
+                        alt={("title" in item ? item.title : item.name) || "Poster"}
+                        className="w-full h-full object-cover"
+                        draggable={false}
+                      />
+
+                    ) : (
+                      <div className="w-[150px] h-[225px] bg-gray-100 rounded-md mx-auto mb-2 flex items-center justify-center text-gray-400 text-xs">
+                        {("title" in item ? item.title : item.name)}
+                      </div>
+                    )}
                   </div>
                 </div>
               </SwiperSlide>

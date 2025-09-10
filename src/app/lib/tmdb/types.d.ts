@@ -16,39 +16,34 @@ export interface Genre {
   name: String;
 }
 
-export interface MovieDetails {
+interface BaseMediaDetails {
   id: number;
-  title: string;
   overview: string;
-  poster_path: string | null;
-  backdrop_path: string | null;
-  release_date: string;
+  poster_path: string;
+  backdrop_path: string;
   vote_average: number;
-  vote_count: number;
   popularity: number;
+  genres: Genre[];
+  original_language: string;
   adult: boolean;
-  genre_ids: Genre[];
+}
+
+export interface MovieDetails extends BaseMediaDetails {
+  title: string;
+  release_date: string;
+  vote_count: number;
   runtime: number;
   status: string;
   imdb_id: string;
   tagline: string;
-  genres: Genre[];
-  original_language: string;
 }
 
-export interface TVDetails {
+export interface TVShowDetails extends BaseMediaDetails {
   id: number;
   name: string;
-  overview: string;
-  poster_path: string | null;
-  backdrop_path: string | null;
   first_air_date: string;
-  vote_average: number;
-  popularity: number;
-  genre_ids: Genre[];
-  original_language: string;
-  original_name: string;
-  adult: boolean;
+  last_air_date: string;
+  number_of_seasons: number;
 }
 
 export interface DiscoverParams {
@@ -67,36 +62,64 @@ export interface MediaItem {
   first_air_date?: string;
 }
 
-export interface CastMember {
+interface BasePerson {
   id: number;
-  character: string;
-  credit_id: string;
-  name: string;
-  profile_path: string
-}
-
-export interface CrewMember {
-  id: number;
-  credit_id: string;
-  job: string;
   name: string;
   profile_path: string;
 }
 
+export interface MovieCastMember extends BasePerson {
+  character: string;
+  credit_id: string;
+}
+
+export interface MovieCrewMember extends BasePerson {
+  job: string;
+  credit_id: string;
+}
+
 export interface MovieCredits {
   id: number;
-  cast: CastMember[];
-  crew: CrewMember[];
+  cast: MovieCastMember[];
+  crew: MovieCrewMember[];
+}
+
+export interface TvShowCastRole {
+  credit_id: string;
+  character: string;
+  episode_count: number;
+}
+
+export interface TvShowCrewJob {
+  credit_id: string;
+  job: string;
+  episode_count: number;
+}
+
+export interface TvShowCastMember extends BasePerson {
+  roles: TvShowCastRole[];
+  total_episode_count: number;
+}
+
+export interface TvShowCrewMember extends BasePerson {
+  jobs: TvShowCrewJob[];
+  total_episode_count: number;
+}
+
+export interface TvShowCredits {
+  id: number;
+  cast: TvShowCastMember[];
+  crew: TvShowCrewMember[];
 }
 
 export interface MovieReleaseDates {
   id: number;
   results: {
-    iso_3166_1: string
+    iso_3166_1: string;
     release_dates: {
       certification: string;
-    }[]
-  }[]
+    }[];
+  }[];
 }
 
 export interface ReleaseDate {
@@ -106,16 +129,16 @@ export interface ReleaseDate {
   note?: string;
   release_date?: string;
   type?: number;
-};
+}
 
 export interface RegionCertifications {
   iso_3166_1: string;
   release_dates: ReleaseDate[];
-};
+}
 
 export interface TMDBResponse {
-  results: MovieDetails[]
-};
+  results: MovieDetails[];
+}
 
 type TMDBProvider = {
   display_priority: number;
@@ -136,4 +159,4 @@ export interface TMDBWatchProvidersResponse {
   results: {
     [countryCode: string]: TMDBWatchProviderEntry;
   };
-};
+}

@@ -15,7 +15,10 @@ export async function POST(req: Request) {
     const tmdbId = body.tmdbId;
 
     if (!tmdbId) {
-      return NextResponse.json({ error: "Missing TMDB ID or Media List ID" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Missing TMDB ID or Media List ID" },
+        { status: 400 }
+      );
     }
 
     const { movie, topCast, directors, watchOptions } = await fetchMovieBundle(tmdbId);
@@ -54,9 +57,9 @@ export async function POST(req: Request) {
     // Connect cast members
     await prisma.movieCastMember.deleteMany({
       where: {
-        movieId: dbMovie.id
-      }
-    })
+        movieId: dbMovie.id,
+      },
+    });
 
     if (topCast?.length) {
       await prisma.movieCastMember.createMany({
@@ -64,18 +67,18 @@ export async function POST(req: Request) {
           movieId: dbMovie.id,
           name: member.name,
           character: member.character,
-          profilePath: member.profile_path
+          profilePath: member.profile_path,
         })),
-        skipDuplicates: true
-      })
+        skipDuplicates: true,
+      });
     }
 
     // Connect directors
     await prisma.movieCrewMember.deleteMany({
       where: {
-        movieId: dbMovie.id
-      }
-    })
+        movieId: dbMovie.id,
+      },
+    });
 
     if (directors?.length) {
       await prisma.movieCrewMember.createMany({
@@ -84,10 +87,10 @@ export async function POST(req: Request) {
           movieId: dbMovie.id,
           name: director.name,
           job: director.job,
-          profilePath: director.profile_path
+          profilePath: director.profile_path,
         })),
-        skipDuplicates: true
-      })
+        skipDuplicates: true,
+      });
     }
 
     // Connect watch providers
@@ -140,7 +143,7 @@ export async function POST(req: Request) {
         movieId: dbMovie.id,
         watched: false,
         liked: false,
-        addedAt: new Date()
+        addedAt: new Date(),
       },
       update: {},
     });
@@ -148,6 +151,9 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, movieId: dbMovie.id });
   } catch (err) {
     console.error("Error saving movie:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

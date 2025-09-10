@@ -1,29 +1,28 @@
 'use client'
 
-import { List } from "@/app/components/ui";
-import { MovieDetails } from "@/app/lib/tmdb/types";
+import { TVShowDetails } from "@/app/lib/tmdb/types"
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { List } from "../ui";
 
 const CATEGORY_DISPLAY_NAMES: Record<string, string> = {
-  popular: "Popular Movies",
-  // now_playing: "Now Playing",
-  top_rated: "Top Rated"
+  popular: "Popular",
+  on_the_air: "On the air",
+  top_rated: "Top rated"
 };
 
-interface MoviesPageProps {
-  categoryData: Record<string, MovieDetails[]>;
+interface TvShowsPageProps {
+  categoryData: Record<string, TVShowDetails[]>
 }
 
-const MoviesPage = ({ categoryData }: MoviesPageProps) => {
+const TvShowsPage = ({ categoryData}: TvShowsPageProps) => {
   const router = useRouter();
   const [augmentedCategoryData, setAugmentedCategoryData] = useState<
-    Record<string, (MovieDetails & { bookmarked?: boolean })[]>
+    Record<string, (TVShowDetails & { bookmarked?: boolean })[]>
   >(categoryData);
-  
 
   const handlePosterClick = (id: number) => {
-    router.push(`/movies/${id}`);
+    router.push(`/tv-shows/${id}`);
   };
 
   useEffect(() => {
@@ -66,7 +65,7 @@ const MoviesPage = ({ categoryData }: MoviesPageProps) => {
         </section>
       ))}
     </div>
-  );
+  )
 }
 
-export default MoviesPage;
+export default TvShowsPage
